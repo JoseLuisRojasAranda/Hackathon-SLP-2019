@@ -1,5 +1,6 @@
 #Python libraries that we need to import for our bot
 import random
+import requests
 from flask import Flask, request
 from pymessenger.bot import Bot
 
