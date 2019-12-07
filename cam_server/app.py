@@ -8,6 +8,7 @@ import base64
 import numpy as np
 
 from flask_cors import CORS
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -18,7 +19,8 @@ coco_ip = "http://localhost:"
 coco_port = "3000"
 
 # HARDCORE DATABASE
-cache = {}
+cache = {
+    "active": True}
 
 @app.after_request
 def after_request(response):
@@ -33,7 +35,10 @@ def index():
 
 @app.route("/vigia/api/client_livefeed", methods=["GET"])
 def get_livefeed():
-    return jsonify({"img": cache["last_frame"]})
+    return jsonify({
+        "img": cache["last_frame"],
+        "people": cache["people"],
+        "datetime": cache["datetime"]})
 
 def render_boxes(image, predictions):
     for pred in predictions:
@@ -69,16 +74,30 @@ def recieve_image():
 
     cam_data = request.json
 
-    # Procesamiento de la imagen
-    r_coco = requests.post(coco_ip+coco_port, data={"img": cam_data["img"]})
-    coco_predictions = json.loads(r_coco.text)
+    if cache["active"] == True:
+        # Procesamiento de la imagen
+        r_coco = requests.post(coco_ip+coco_port, data={"img": cam_data["img"]})
+        coco_predictions = json.loads(r_coco.text)
 
-    if len(coco_predictions) > 0:
-        pass
+        cache["people"] = len(coco_predictions)
+        cache["last_frame"] = draw_predictions(cam_data["img"], coco_predictions.copy())
     else:
-        pass
+        cache["people"] = 0
+        cache["last_frame"] = cam_data["img"]
 
-    cache["last_frame"] = draw_predictions(cam_data["img"], coco_predictions.copy())
+
+    # date time
+    c_time = datetime.now()
+    d_time = {
+        "year": c_time.year,
+        "month": c_time.month,
+        "day": c_time.day,
+        "hour": c_time.hour,
+        "minute": c_time.minute,
+        "second": c_time.second
+    }
+
+    cache["datetime"] = d_time
 
     return jsonify(results=coco_predictions), 201
 
