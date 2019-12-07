@@ -6,7 +6,7 @@ from pymessenger.bot import Bot
 
 app = Flask(__name__)
 ACCESS_TOKEN = 'EAAGZAatzzDiMBAB0w6WzZBPAAbK821ZAXV1reZCtfPLZAKm4Cw8E3JpscpZB7dzzvDrENUNTq7W4eESa4Yrm7VZBpDWgGhROtEmg16cdkJ8FSeNN2YWTobLtruXshtifLjcBfgwL0ajPZBHfWPgDSxEI7q8tnvZAr0UhsUquJfgJ4ZCwZDZD'
-VERIFY_TOKEN = 'TESTINGTOKEN'
+VERIFY_TOKEN = 'holaquepedo'
 bot = Bot(ACCESS_TOKEN)
 
 @app.route("/send_msg", methods=["POST"])
