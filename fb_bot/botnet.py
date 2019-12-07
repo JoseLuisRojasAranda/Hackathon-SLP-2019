@@ -21,10 +21,10 @@ driver = webdriver.Chrome('./chromedriver')
 @app.route("/")
 def test():
 
-    target = '"Quadruple Thread"'
+    target = '"Diego Perez"'
 
     # Replace the below string with your own message
-    string = "Te estan robando perro."
+    string = "Detectamos un intruso."
 
     x_arg = '//span[contains(@title,' + target + ')]'
     group_title = wait.until(EC.presence_of_element_located((
@@ -38,6 +38,12 @@ def test():
 
     time.sleep(3)
     subprocess.run(["osascript", "-e", 'tell application "System Events" to key code 36'])
+    time.sleep(1)
+ 
+    message.send_keys(string)
+
+    sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
+    sendbutton.click()
     #subprocess.run(["osascript", "-e", 'tell application "System Events" to keystroke "enter" using command down'])
 
     #sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]

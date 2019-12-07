@@ -28,7 +28,7 @@ wa_port = "3006"
 # HARDCORE DATABASE
 cache = {
     "active": True,
-    "wa": False}
+    "wa": True}
 
 @app.after_request
 def after_request(response):
@@ -64,6 +64,7 @@ def get_activatiob():
 @app.route("/vigia/api/set_act", methods=["POST"])
 def set_activation(): 
     data = request.json
+    print(data)
     cache["activate"] = data.activate;
 
     return "jalo"
@@ -81,7 +82,7 @@ def render_boxes(image, predictions):
             w = int(bbox[2])
             h = int(bbox[3])
 
-            cv2.rectangle(image, (x, y), (x+w, y+h), (0,0,255), 1)
+            cv2.rectangle(image, (x, y), (x+w, y+h), (255, 255, 0), 1)
 
 def draw_predictions(image, predictions):
     image = cv2.imdecode(np.fromstring(base64.b64decode(image), dtype=np.uint8),
@@ -121,6 +122,9 @@ def recieve_image():
         if people > 0 and cache["wa"] == False:
             cache["wa"] = True
             t = threading.Thread(target=wa_notification)
+            t.start()
+        elif people == 0:
+            cache["wa"] = False
     else:
         cache["people"] = 0
         cache["last_frame"] = cam_data["img"]
