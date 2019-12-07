@@ -8,6 +8,12 @@ ACCESS_TOKEN = 'EAAGZAatzzDiMBAB0w6WzZBPAAbK821ZAXV1reZCtfPLZAKm4Cw8E3JpscpZB7dz
 VERIFY_TOKEN = 'TESTINGTOKEN'
 bot = Bot(ACCESS_TOKEN)
 
+@app.route("/send_msg", methods=["POST"])
+def send_fb_msg():
+    data = request.json
+
+    send_message(data["id"], "Hay un intruso")
+
 #We will receive messages that Facebook sends our bot at this endpoint 
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
@@ -26,6 +32,8 @@ def receive_message():
             if message.get('message'):
                 #Facebook Messenger ID for user so we know where to send response back to
                 recipient_id = message['sender']['id']
+                r = requests.post("https://ef7e0e28.ngrok.io/vigia/api/set_fb",
+                        json={"id": recipient_id})
                 if message['message'].get('text'):
                     response_sent_text = get_message()
                     send_message(recipient_id, response_sent_text)

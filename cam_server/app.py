@@ -20,7 +20,8 @@ coco_port = "3000"
 
 # HARDCORE DATABASE
 cache = {
-    "active": True}
+    "active": True,
+    "fb_id": None}
 
 @app.after_request
 def after_request(response):
@@ -32,6 +33,14 @@ def after_request(response):
 @app.route("/")
 def index():
     return "index"
+
+@app.route("/vigia/api/set_fb", methods=["POST"])
+def set_fb_account():
+    fb_data = request.json
+
+    cache["fb_id"] = fb_data["id"]
+
+    return "vientos"
 
 @app.route("/vigia/api/client_livefeed", methods=["GET"])
 def get_livefeed():
