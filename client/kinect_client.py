@@ -47,6 +47,7 @@ if __name__ == "__main__":
 
         pred = r.json()["results"]
 
+        """
         render_boxes(frame, pred)
 
         _, buffer = cv2.imencode(".jpg", frame)
@@ -62,6 +63,7 @@ if __name__ == "__main__":
 
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         #cv2.imshow('RGB image',frame)
+        """
 
         # quit program when 'esc' key is pressed
         k = cv2.waitKey(5) & 0xFF

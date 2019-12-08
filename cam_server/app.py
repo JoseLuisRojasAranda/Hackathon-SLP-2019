@@ -28,7 +28,8 @@ wa_port = "3006"
 # HARDCORE DATABASE
 cache = {
     "active": True,
-    "wa": True}
+    "wa": True,
+    "frames_d": 0}
 
 @app.after_request
 def after_request(response):
@@ -120,15 +121,18 @@ def recieve_image():
         cache["people"] = len(coco_predictions)
         cache["last_frame"] = draw_predictions(cam_data["img"], coco_predictions.copy())
         if people > 0 and cache["wa"] == False:
-            cache["wa"] = True
-            t = threading.Thread(target=wa_notification)
-            t.start()
+            cache["frames_d"] += 1
+            if cache["frames_d"] >= 2:
+                cache["wa"] = True
+                t = threading.Thread(target=wa_notification)
+                t.start()
         elif people == 0:
             cache["wa"] = False
     else:
         cache["people"] = 0
         cache["last_frame"] = cam_data["img"]
         cache["wa"] = False
+        cache["frames_d"] = 0
 
     # date time
     c_time = datetime.now()
